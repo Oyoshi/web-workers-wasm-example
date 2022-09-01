@@ -3,9 +3,6 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -13,6 +10,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+
+import Form from "components/form";
 
 function createData(
   name: string,
@@ -33,6 +32,10 @@ const rows = [
 ];
 
 function App() {
+  const handleOnSubmit = (type: "standard" | "worker", val?: string) => {
+    console.log(val, type);
+  };
+
   return (
     <>
       <CssBaseline />
@@ -40,7 +43,7 @@ function App() {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Compute N-th Fibonacci Number
+              Compute n-th Fibonacci Number
             </Typography>
           </Toolbar>
         </AppBar>
@@ -54,19 +57,7 @@ function App() {
             maxWidth: "1024px",
           }}
         >
-          <form>
-            <TextField
-              variant="standard"
-              label="number"
-              sx={{ width: "100%" }}
-            />
-            <Box sx={{ mt: 3 }}>
-              <ButtonGroup>
-                <Button variant="contained">Compute Standard</Button>
-                <Button variant="contained">Compute With Worker</Button>
-              </ButtonGroup>
-            </Box>
-          </form>
+          <Form onSubmit={handleOnSubmit} />
           <TableContainer component={Paper} sx={{ mt: 6 }}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
