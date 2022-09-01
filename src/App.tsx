@@ -1,8 +1,7 @@
+import { FC, ReactNode } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import AppBar from "@mui/material/AppBar";
+
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -11,6 +10,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
+import TopBar from "components/topbar";
 import Form from "components/form";
 
 function createData(
@@ -31,6 +31,25 @@ const rows = [
   createData("Gingerbread", 356, 16.0, 49, 3.9),
 ];
 
+interface AppLayoutProps {
+  children: ReactNode;
+}
+
+const AppLayout: FC<AppLayoutProps> = ({ children }) => (
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+      m: "3em auto",
+      maxWidth: "1024px",
+    }}
+  >
+    {children}
+  </Box>
+);
+
 function App() {
   const handleOnSubmit = (type: "standard" | "worker", val?: string) => {
     console.log(val, type);
@@ -40,23 +59,8 @@ function App() {
     <>
       <CssBaseline />
       <Box>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Compute n-th Fibonacci Number
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-            m: "3em auto",
-            maxWidth: "1024px",
-          }}
-        >
+        <TopBar />
+        <AppLayout>
           <Form onSubmit={handleOnSubmit} />
           <TableContainer component={Paper} sx={{ mt: 6 }}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -87,7 +91,7 @@ function App() {
               </TableBody>
             </Table>
           </TableContainer>
-        </Box>
+        </AppLayout>
       </Box>
     </>
   );
