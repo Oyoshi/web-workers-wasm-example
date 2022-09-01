@@ -1,98 +1,114 @@
-import { FC, ReactNode } from "react";
+import { useReducer } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-
-import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-
 import TopBar from "components/topbar";
+import AppLayout from "components/app-layout";
 import Form from "components/form";
+import ResultsTable from "components/results-table";
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-) {
-  return { name, calories, fat, carbs, protein };
-}
+type State = {
+  computedFibNums: ComputedFibNum[];
+  error?: string;
+};
 
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
+type ComputedFibNum = {
+  id: string;
+  type: "standard" | "worker";
+  time: number;
+  nth: number;
+  fibNum: number;
+};
 
-interface AppLayoutProps {
-  children: ReactNode;
-}
+type Action =
+  | { type: "SET_ERROR"; error: string }
+  | { type: "SET_FIBO"; computedFib: ComputedFibNum };
 
-const AppLayout: FC<AppLayoutProps> = ({ children }) => (
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      flexDirection: "column",
-      m: "3em auto",
-      maxWidth: "1024px",
-    }}
-  >
-    {children}
-  </Box>
-);
+export const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "SET_ERROR":
+      return { ...state, error: action.error };
+    case "SET_FIBO":
+      return {
+        ...state,
+        computedFibNums: [...state.computedFibNums, { ...action.computedFib }],
+      };
+    /*case "UPDATE_FIBO": {
+      const curr = (state as any).computedFibs.filter(
+        (c: any) => c.id === action.id
+      )[0];
+      const idx = (state as any).computedFibs.indexOf(curr);
+
+      curr.loading = false;
+      curr.time = action.time;
+      curr.fibNum = action.fibNum;
+
+      (state as any).computedFibs[idx] = curr;
+      return { ...state };
+    }*/
+    default:
+      return state;
+  }
+};
+
+const fib = (n: number): number => (n < 2 ? n : fib(n - 2) + fib(n - 1));
 
 function App() {
+  const [info, dispatch] = useReducer(reducer, {
+    error: "",
+    computedFibNums: [],
+  });
+
+  /*const runWorker = (num: any, id: any) => {
+    dispatch({ type: "SET_ERROR", error: "" });
+    const worker = new window.Worker("./fib-worker.js");
+
+    worker.postMessage({ num });
+    worker.onerror = (err) => err;
+    worker.onmessage = (e) => {
+      const { time, fibNum } = e.data;
+      dispatch({
+        type: "UPDATE_FIBO",
+        id,
+        time,
+        fibNum,
+      });
+      worker.terminate();
+    };
+  };*/
+
   const handleOnSubmit = (type: "standard" | "worker", val?: string) => {
-    console.log(val, type);
+    const nth = Number(val);
+    if (isNaN(nth) || nth < 0) {
+      dispatch({
+        type: "SET_ERROR",
+        error: "Number must be non negative integer",
+      });
+      return;
+    }
+    const id = info.computedFibNums.length;
+    const startTime = new Date().getTime();
+    const fibNum = fib(nth);
+    const time = new Date().getTime() - startTime;
+    dispatch({
+      type: "SET_FIBO",
+      computedFib: {
+        id: id.toString(),
+        type,
+        time,
+        nth,
+        fibNum,
+      },
+    });
+    // runWorker(val, id);
   };
 
   return (
     <>
       <CssBaseline />
-      <Box>
-        <TopBar />
-        <AppLayout>
-          <Form onSubmit={handleOnSubmit} />
-          <TableContainer component={Paper} sx={{ mt: 6 }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Dessert (100g serving)</TableCell>
-                  <TableCell align="right">Calories</TableCell>
-                  <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                  <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                  <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => (
-                  <TableRow
-                    key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </AppLayout>
-      </Box>
+      <TopBar />
+      <AppLayout>
+        <Form onSubmit={handleOnSubmit} />
+        <ResultsTable data={info.computedFibNums} />
+      </AppLayout>
     </>
   );
 }

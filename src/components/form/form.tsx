@@ -36,13 +36,9 @@ const Form: FC<FormProps> = ({ onSubmit }) => {
         onChange={handleInputChange}
       />
       <Box sx={{ mt: 3 }}>
-        <ButtonGroup>
-          <Button variant="contained" onClick={handleOnSubmitStandard}>
-            Standard Computation
-          </Button>
-          <Button variant="contained" onClick={handleOnSubmitWorker}>
-            Worker Computation
-          </Button>
+        <ButtonGroup variant="contained">
+          <Button onClick={handleOnSubmitStandard}>Standard Computation</Button>
+          <Button onClick={handleOnSubmitWorker}>Worker Computation</Button>
         </ButtonGroup>
       </Box>
     </form>
