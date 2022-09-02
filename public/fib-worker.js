@@ -5,9 +5,10 @@ onmessage = (event) => {
 
   const startTime = new Date().getTime();
   const fibNum = fib(nth);
+  const time = new Date().getTime() - startTime;
 
   postMessage({
     fibNum,
-    time: new Date().getTime() - startTime,
+    time,
   });
 };

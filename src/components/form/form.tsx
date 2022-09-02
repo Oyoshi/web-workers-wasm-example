@@ -28,6 +28,7 @@ const Form: FC<FormProps> = ({ onSubmit }) => {
   return (
     <form>
       <TextField
+        id="nthNumberInput"
         label="number"
         type="number"
         InputLabelProps={{
@@ -38,8 +39,12 @@ const Form: FC<FormProps> = ({ onSubmit }) => {
       />
       <Box sx={{ mt: 3 }}>
         <ButtonGroup variant="contained">
-          <Button onClick={handleOnSubmitStandard}>Standard Computation</Button>
-          <Button onClick={handleOnSubmitWorker}>Worker Computation</Button>
+          <Button id="submitStdButton" onClick={handleOnSubmitStandard}>
+            Standard Computation
+          </Button>
+          <Button id="submitWorkerButton" onClick={handleOnSubmitWorker}>
+            Worker Computation
+          </Button>
         </ButtonGroup>
       </Box>
     </form>

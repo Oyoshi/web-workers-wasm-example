@@ -67,7 +67,7 @@ function App() {
     if (isNaN(nth) || nth < 0) {
       dispatch({
         type: "SET_ERROR",
-        error: "Number must be non negative integer!",
+        error: "Number must be a non negative integer!",
       });
       return;
     }
