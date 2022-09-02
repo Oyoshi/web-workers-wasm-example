@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Chip from "@mui/material/Chip";
-import { ComputedFibNum } from "types";
+import { ComputedFibNum } from "reducers";
 
 interface ResultsTableProps {
   data: ComputedFibNum[];

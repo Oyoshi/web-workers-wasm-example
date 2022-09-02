@@ -1,1 +1,1 @@
-export { reducer } from "./fib-num-reducer";
+export * from "./fib-num-reducer";

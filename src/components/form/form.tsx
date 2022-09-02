@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { ComputationType } from "types";
+import { ComputationType } from "reducers";
 
 interface FormProps {
   onSubmit: (type: ComputationType, val?: string) => void;
