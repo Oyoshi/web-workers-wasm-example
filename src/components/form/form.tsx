@@ -3,9 +3,10 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
+import { ComputationType } from "types";
 
 interface FormProps {
-  onSubmit: (type: "standard" | "worker", val?: string) => void;
+  onSubmit: (type: ComputationType, val?: string) => void;
 }
 
 const Form: FC<FormProps> = ({ onSubmit }) => {

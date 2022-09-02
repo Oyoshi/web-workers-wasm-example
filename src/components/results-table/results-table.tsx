@@ -7,14 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Chip from "@mui/material/Chip";
-
-type ComputedFibNum = {
-  id: string;
-  type: "standard" | "worker";
-  time: number;
-  nth: number;
-  fibNum: number;
-};
+import { ComputedFibNum } from "types";
 
 interface ResultsTableProps {
   data: ComputedFibNum[];
@@ -34,9 +27,12 @@ const ResultsTable: FC<ResultsTableProps> = ({ data }) =>
         </TableHead>
         <TableBody>
           {data.map((row) => (
-            <TableRow key={row.id}>
+            <TableRow key={`FIBONACCI_NUM_COMPUTATRION_IDX_${row.id}`}>
               <TableCell component="th" scope="row">
-                <Chip label={row.type} color="secondary" />
+                <Chip
+                  label={row.type}
+                  color={row.type === "standard" ? "primary" : "secondary"}
+                />
               </TableCell>
               <TableCell align="right">{row.nth}</TableCell>
               <TableCell align="right">{row.fibNum}</TableCell>

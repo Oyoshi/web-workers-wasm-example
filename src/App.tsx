@@ -4,78 +4,58 @@ import TopBar from "components/topbar";
 import AppLayout from "components/app-layout";
 import Form from "components/form";
 import ResultsTable from "components/results-table";
-
-type State = {
-  computedFibNums: ComputedFibNum[];
-  error?: string;
-};
-
-type ComputedFibNum = {
-  id: string;
-  type: "standard" | "worker";
-  time: number;
-  nth: number;
-  fibNum: number;
-};
-
-type Action =
-  | { type: "SET_ERROR"; error: string }
-  | { type: "SET_FIBO"; computedFib: ComputedFibNum };
-
-export const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case "SET_ERROR":
-      return { ...state, error: action.error };
-    case "SET_FIBO":
-      return {
-        ...state,
-        computedFibNums: [...state.computedFibNums, { ...action.computedFib }],
-      };
-    /*case "UPDATE_FIBO": {
-      const curr = (state as any).computedFibs.filter(
-        (c: any) => c.id === action.id
-      )[0];
-      const idx = (state as any).computedFibs.indexOf(curr);
-
-      curr.loading = false;
-      curr.time = action.time;
-      curr.fibNum = action.fibNum;
-
-      (state as any).computedFibs[idx] = curr;
-      return { ...state };
-    }*/
-    default:
-      return state;
-  }
-};
-
-const fib = (n: number): number => (n < 2 ? n : fib(n - 2) + fib(n - 1));
+import { ComputationType } from "types";
+import { reducer } from "reducers";
+import { fib } from "utils";
 
 function App() {
-  const [info, dispatch] = useReducer(reducer, {
+  const [data, dispatch] = useReducer(reducer, {
     error: "",
     computedFibNums: [],
   });
 
-  /*const runWorker = (num: any, id: any) => {
+  const runWorkerComputation = (type: ComputationType, nth: number) => {
     dispatch({ type: "SET_ERROR", error: "" });
-    const worker = new window.Worker("./fib-worker.js");
 
-    worker.postMessage({ num });
+    const id = data.computedFibNums.length;
+    const worker = new window.Worker("./fib-worker.js");
+    worker.postMessage({ nth });
     worker.onerror = (err) => err;
     worker.onmessage = (e) => {
       const { time, fibNum } = e.data;
       dispatch({
-        type: "UPDATE_FIBO",
-        id,
-        time,
-        fibNum,
+        type: "SET_FIB",
+        computedFib: {
+          id,
+          type,
+          time,
+          nth,
+          fibNum,
+        },
       });
       worker.terminate();
     };
-  };*/
+  };
 
-  const handleOnSubmit = (type: "standard" | "worker", val?: string) => {
+  const runStandardComputation = (type: ComputationType, nth: number) => {
+    dispatch({ type: "SET_ERROR", error: "" });
+    const id = data.computedFibNums.length;
+    const startTime = new Date().getTime();
+    const fibNum = fib(nth);
+    const time = new Date().getTime() - startTime;
+    dispatch({
+      type: "SET_FIB",
+      computedFib: {
+        id,
+        type,
+        time,
+        nth,
+        fibNum,
+      },
+    });
+  };
+
+  const handleOnSubmit = (type: ComputationType, val?: string) => {
     const nth = Number(val);
     if (isNaN(nth) || nth < 0) {
       dispatch({
@@ -84,21 +64,11 @@ function App() {
       });
       return;
     }
-    const id = info.computedFibNums.length;
-    const startTime = new Date().getTime();
-    const fibNum = fib(nth);
-    const time = new Date().getTime() - startTime;
-    dispatch({
-      type: "SET_FIBO",
-      computedFib: {
-        id: id.toString(),
-        type,
-        time,
-        nth,
-        fibNum,
-      },
-    });
-    // runWorker(val, id);
+    if (type === "standard") {
+      runStandardComputation(type, nth);
+    } else {
+      runWorkerComputation(type, nth);
+    }
   };
 
   return (
@@ -107,7 +77,8 @@ function App() {
       <TopBar />
       <AppLayout>
         <Form onSubmit={handleOnSubmit} />
-        <ResultsTable data={info.computedFibNums} />
+        {data.error && <h2>{data.error}</h2>}
+        <ResultsTable data={data.computedFibNums} />
       </AppLayout>
     </>
   );
