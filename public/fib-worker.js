@@ -1,4 +1,7 @@
-const fib = (n) => (n < 2 ? n : fib(n - 1) + fib(n - 2));
+const fib = (n) => {
+  if (n === 0 || n === 1) return n;
+  return fib(n - 2) + fib(n - 1);
+};
 
 onmessage = (event) => {
   const { nth } = event.data;
