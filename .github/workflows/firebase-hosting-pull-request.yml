@@ -16,7 +16,7 @@ jobs:
         run: yarn test
 
       - name: Build App
-        run: run build
+        run: yarn build
 
       - name: Deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
