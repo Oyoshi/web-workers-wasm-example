@@ -1,5 +1,5 @@
 {
-  "name": "web-workers-example",
+  "name": "web-workers-wasm-example",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
