@@ -16,6 +16,7 @@ jobs:
         run: yarn build:wasm
       
       - name: Install Dependencies
+        run: yarn add ./fib-wasm-lib/pkg
         run: yarn install --frozen-lockfile
 
       - name: Run Tests
