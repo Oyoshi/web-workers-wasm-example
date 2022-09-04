@@ -18,7 +18,7 @@ jobs:
       - name: Build App
         run: yarn build
 
-      - name: Deploy
+      - name: Deploy Preview
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"

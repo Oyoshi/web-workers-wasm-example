@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  web-workers-example:
+    build: .
+    ports:
+      - "8080:80"
+    restart: always
