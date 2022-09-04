@@ -1,12 +1,11 @@
 import { FC, ChangeEventHandler, MouseEventHandler, useState } from "react";
-import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import { ComputationType } from "reducers";
+import { ComputationType, ComputationLng } from "reducers";
 
 interface FormProps {
-  onSubmit: (type: ComputationType, val?: string) => void;
+  onSubmit: (type: ComputationType, lng: ComputationLng, val?: string) => void;
 }
 
 const Form: FC<FormProps> = ({ onSubmit }) => {
@@ -15,38 +14,60 @@ const Form: FC<FormProps> = ({ onSubmit }) => {
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) =>
     setInputValue(e.target.value);
 
-  const handleOnSubmitStandard: MouseEventHandler<HTMLButtonElement> = (e) => {
+  const handleOnSubmitStandardJS: MouseEventHandler<HTMLButtonElement> = (
+    e
+  ) => {
     e.preventDefault();
-    onSubmit("standard", inputValue);
+    onSubmit("standard", "javascript", inputValue);
   };
 
-  const handleOnSubmitWorker: MouseEventHandler<HTMLButtonElement> = (e) => {
+  const handleOnSubmitStandardWASM: MouseEventHandler<HTMLButtonElement> = (
+    e
+  ) => {
     e.preventDefault();
-    onSubmit("worker", inputValue);
+    onSubmit("standard", "wasm", inputValue);
+  };
+
+  const handleOnSubmitWorkerJS: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    onSubmit("worker", "javascript", inputValue);
   };
 
   return (
     <form>
-      <TextField
-        id="nthNumberInput"
-        label="number"
-        type="number"
-        InputLabelProps={{
-          shrink: true,
-        }}
-        sx={{ width: "100%" }}
-        onChange={handleInputChange}
-      />
-      <Box sx={{ mt: 3 }}>
-        <ButtonGroup variant="contained">
-          <Button id="submitStdButton" onClick={handleOnSubmitStandard}>
-            Standard Computation
-          </Button>
-          <Button id="submitWorkerButton" onClick={handleOnSubmitWorker}>
-            Worker Computation
-          </Button>
-        </ButtonGroup>
-      </Box>
+      <Stack spacing={2}>
+        <TextField
+          id="nthNumberInput"
+          label="number"
+          type="number"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          sx={{ width: "100%" }}
+          onChange={handleInputChange}
+        />
+        <Button
+          id="submitStdJSButton"
+          variant="contained"
+          onClick={handleOnSubmitStandardJS}
+        >
+          Standard JS Computation
+        </Button>
+        <Button
+          id="submitWorkerJSButton"
+          variant="contained"
+          onClick={handleOnSubmitWorkerJS}
+        >
+          Worker JS Computation
+        </Button>
+        <Button
+          id="submitStdWASMButton"
+          variant="contained"
+          onClick={handleOnSubmitStandardWASM}
+        >
+          Standard WASM Computation
+        </Button>
+      </Stack>
     </form>
   );
 };

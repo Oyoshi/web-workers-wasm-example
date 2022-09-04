@@ -20,9 +20,10 @@ const ResultsTable: FC<ResultsTableProps> = ({ data }) =>
         <TableHead>
           <TableRow>
             <TableCell>Computation Type</TableCell>
+            <TableCell>Computation Language</TableCell>
             <TableCell align="right">N-th</TableCell>
             <TableCell align="right">Fibonacci Number</TableCell>
-            <TableCell align="right">Time&nbsp;[ms]</TableCell>
+            <TableCell align="right">Time [ms]</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -32,6 +33,12 @@ const ResultsTable: FC<ResultsTableProps> = ({ data }) =>
                 <Chip
                   label={row.type}
                   color={row.type === "standard" ? "primary" : "secondary"}
+                />
+              </TableCell>
+              <TableCell component="th" scope="row">
+                <Chip
+                  label={row.lng}
+                  color={row.lng === "javascript" ? "warning" : "error"}
                 />
               </TableCell>
               <TableCell align="right">{row.nth}</TableCell>
