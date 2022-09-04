@@ -9,6 +9,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
       
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      
+      - name: Build WASM Lib:
+        run: yarn build:wasm
+      
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 

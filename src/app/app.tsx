@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, useEffect, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import AppBar from "components/appbar";
 import AppLayout from "components/app-layout";
@@ -8,11 +8,20 @@ import Snackbar, { OnCloseFunction } from "components/snackbar";
 import { reducer, ComputationType } from "reducers";
 import { fib } from "utils";
 
+import init, { add } from "fib-wasm-lib";
+
 function App() {
   const [res, dispatch] = useReducer(reducer, {
     error: "",
     computedFibNums: [],
   });
+
+  const [ans, setAns] = useState(0);
+  useEffect(() => {
+    init().then(() => {
+      setAns(add(1, 5));
+    });
+  }, []);
 
   const handleOnCloseAlert: OnCloseFunction = (event, reason) => {
     if (reason === "clickaway") {
@@ -92,6 +101,7 @@ function App() {
         />
         <Form onSubmit={handleOnSubmit} />
         <ResultsTable data={res.computedFibNums} />
+        <h1>{ans}</h1>
       </AppLayout>
     </>
   );
