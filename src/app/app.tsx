@@ -1,11 +1,12 @@
 import { useReducer } from "react";
+import init, { fib_wasm } from "fib-wasm-lib";
 import CssBaseline from "@mui/material/CssBaseline";
 import AppBar from "components/appbar";
 import AppLayout from "components/app-layout";
 import Form from "components/form";
 import ResultsTable from "components/results-table";
 import Snackbar, { OnCloseFunction } from "components/snackbar";
-import { reducer, ComputationType } from "reducers";
+import { reducer, ComputationType, ComputationLng } from "reducers";
 import { fib } from "utils";
 
 function App() {
@@ -21,7 +22,11 @@ function App() {
     dispatch({ type: "SET_ERROR", error: "" });
   };
 
-  const runWorkerComputation = (type: ComputationType, nth: number) => {
+  const runWorkerComputation = (
+    type: ComputationType,
+    lng: ComputationLng,
+    nth: number
+  ) => {
     dispatch({ type: "SET_ERROR", error: "" });
 
     const id = res.computedFibNums.length;
@@ -36,6 +41,7 @@ function App() {
         computedFib: {
           id,
           type,
+          lng,
           time,
           nth,
           fibNum,
@@ -45,25 +51,53 @@ function App() {
     };
   };
 
-  const runStandardComputation = (type: ComputationType, nth: number) => {
+  const runStandardComputation = (
+    type: ComputationType,
+    lng: ComputationLng,
+    nth: number
+  ) => {
     dispatch({ type: "SET_ERROR", error: "" });
     const id = res.computedFibNums.length;
+    let fibNum = -1;
     const startTime = new Date().getTime();
-    const fibNum = fib(nth);
-    const time = new Date().getTime() - startTime;
-    dispatch({
-      type: "SET_FIB",
-      computedFib: {
-        id,
-        type,
-        time,
-        nth,
-        fibNum,
-      },
-    });
+    if (lng == "javascript") {
+      fibNum = fib(nth);
+      const time = new Date().getTime() - startTime;
+      dispatch({
+        type: "SET_FIB",
+        computedFib: {
+          id,
+          type,
+          lng,
+          time,
+          nth,
+          fibNum,
+        },
+      });
+    } else {
+      init().then(() => {
+        fibNum = fib_wasm(nth);
+        const time = new Date().getTime() - startTime;
+        dispatch({
+          type: "SET_FIB",
+          computedFib: {
+            id,
+            type,
+            lng,
+            time,
+            nth,
+            fibNum,
+          },
+        });
+      });
+    }
   };
 
-  const handleOnSubmit = (type: ComputationType, val?: string) => {
+  const handleOnSubmit = (
+    type: ComputationType,
+    lng: ComputationLng,
+    val?: string
+  ) => {
     const nth = Number(val);
     if (isNaN(nth) || nth < 0) {
       dispatch({
@@ -73,9 +107,9 @@ function App() {
       return;
     }
     if (type === "standard") {
-      runStandardComputation(type, Math.floor(nth));
+      runStandardComputation(type, lng, Math.floor(nth));
     } else {
-      runWorkerComputation(type, Math.floor(nth));
+      runWorkerComputation(type, lng, Math.floor(nth));
     }
   };
 

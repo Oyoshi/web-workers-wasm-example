@@ -1,6 +1,8 @@
 node_modules/
 build/
 .github/
+target/
+pkg/
 Dockerfile
 .dockerignore
 .gitignore

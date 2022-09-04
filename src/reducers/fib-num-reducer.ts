@@ -1,8 +1,11 @@
 export type ComputationType = "standard" | "worker";
 
+export type ComputationLng = "javascript" | "wasm";
+
 export type ComputedFibNum = {
   id: number;
   type: ComputationType;
+  lng: ComputationLng;
   time: number;
   nth: number;
   fibNum: number;
