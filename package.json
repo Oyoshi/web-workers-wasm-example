@@ -16,20 +16,35 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "typescript": "^4.4.2",
+    "typescript": "*",
     "web-vitals": "^2.1.0"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.36.1",
+    "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.5",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.{js,ts,jsx,tsx,css,scss,json,yml,yaml}": [
+      "eslint --fix",
+      "prettier --write -u"
+    ]
   },
   "scripts": {
     "prepare": "husky install",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,scss,json,yml,yaml}\"",
+    "lint": "eslint \"./**/*.{js,jsx,ts,tsx,css,scss,json,yml,yaml}\"",
+    "lint:fix": "eslint --fix \"./**/*.{js,jsx,ts,tsx,css,scss,json,yml,yaml}\""
   },
   "eslintConfig": {
     "extends": [
@@ -48,8 +63,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "lint-staged": {
-    "*.{js,jsx,css,scss,ts,tsx,json,yml,yaml,md}": "prettier --write"
   }
 }

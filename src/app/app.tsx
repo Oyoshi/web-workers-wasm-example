@@ -26,6 +26,7 @@ function App() {
 
     const id = res.computedFibNums.length;
     const worker = new window.Worker("./fib-worker.js");
+
     worker.postMessage({ nth });
     worker.onerror = (err) => err;
     worker.onmessage = (e) => {
