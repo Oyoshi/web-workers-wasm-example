@@ -18,8 +18,8 @@ yarn start
 
 #### Docker
 
-**WORK IN PROGRESS**
+Type `docker-compose up -d` and then navigate to `http://localhost:8080/`.
 
-#### Unit Tests
+#### Unit Tests :warning:
 
-**WORK IN PROGRESS**
+UTs are failing because of problem with imported WASM function.

@@ -10,7 +10,6 @@ WORKDIR /app
 COPY --from=wasm-pkg /app/fib-wasm-lib /app/fib-wasm-lib
 COPY package.json .
 COPY yarn.lock .
-COPY fib-wasm-lib/* .
 RUN yarn install --frozen-lockfile
 COPY . .
 RUN yarn build
